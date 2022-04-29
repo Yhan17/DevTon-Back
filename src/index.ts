@@ -1,9 +1,9 @@
 import express from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import http from 'http'
 import { Server, Socket } from "socket.io";
+import config from './config/config';
 
 const app = express()
 const PORT = 3333
@@ -12,8 +12,10 @@ app.use(cors())
 const httpServer = http.createServer(app)
 const io = new Server(httpServer)
 
-app.get('/', (req,res) => {
-  return res.json({message: "running"})
+mongoose.connect(config.mongo.url, config.mongo.options)
+
+app.get('/', (req, res) => {
+  return res.json({ message: "running" })
 })
 
 app.listen(PORT, () => console.log(`🎉 App Running on ${PORT}`))
