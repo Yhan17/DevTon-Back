@@ -8,6 +8,22 @@ import axios from "axios";
 import { Request } from 'express'
 
 export class DevRepository implements IDevRepository {
+  async registerTechs(userId: string, techs: string[]): Promise<Either<Occurrences, IDev>> {
+    try {
+      const loggedUser = await DevSchema.findById(userId);
+      if (!loggedUser) {
+        return left<Occurrences, IDev>(Occurrences.DatabaseError)
+      }
+      loggedUser.languages.push(...techs)
+      loggedUser.isFirstTime = false
+      await loggedUser.save()
+      return right<Occurrences, IDev>(loggedUser)
+    } catch(e) {
+      console.log(e)
+      return left<Occurrences, IDev>(Occurrences.ServerError)
+
+    }
+  }
   async getDevs(userId: string, techs: string[] | string): Promise<Either<Occurrences, IDev[]>> {
     try {
       const loggedUser = await DevSchema.findById(userId);

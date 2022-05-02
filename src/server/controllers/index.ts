@@ -30,6 +30,18 @@ export class DevTonController {
     )
   }
 
+  async registerTechs(req: Request, res: Response): Promise<Response> {
+    const { user } = req.headers
+    const { techs } = req.body
+    const result = await this.devRepository.registerTechs(`${user}`, techs as string[])
+    return pipe(result,
+      E.fold(
+        (e) => res.status(unwrapOccurrences(e).status).json(unwrapOccurrences(e)),
+        (r) => res.json(r)
+      )
+    )
+  }
+
   async storeDev(req: Request, res: Response): Promise<Response> {
     const { username } = req.body;
     if (typeof username != "string") {
