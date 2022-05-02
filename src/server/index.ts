@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
-import http from 'http'
+import { createServer } from 'http'
 import { Server, Socket } from "socket.io";
 import config from '../config/config';
 import { routes } from './routes';
@@ -9,9 +9,16 @@ import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 const app = express()
 const PORT = 3333
 
-const httpServer = http.createServer(app)
-const io = new Server(httpServer)
-
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: '*',
+  }
+});
+io.on("connection", (socket: Socket) => {
+  const { user } = socket.handshake.query;
+  connectedUsers[user as string] = socket.id;
+})
 
 const connectedUsers: Record<string, string> = {}
 
@@ -24,10 +31,6 @@ declare global {
   }
 }
 
-io.on('connection', socket => {
-  const { user } = socket.handshake.query;
-  connectedUsers[user as string] = socket.id;
-})
 
 
 app.use((req, res, next) => {
@@ -42,4 +45,4 @@ mongoose.connect(config.mongo.url, config.mongo.options, () => console.log('🎲
 app.use(express.json())
 app.use(cors())
 app.use(routes)
-app.listen(process.env.PORT || PORT, () => console.log(`🎉 App Running on ${PORT}`))
+httpServer.listen(process.env.PORT || PORT, () => console.log(`🎉 App Running on ${PORT}`))
