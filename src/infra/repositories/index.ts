@@ -8,7 +8,7 @@ import axios from "axios";
 import { Request } from 'express'
 
 export class DevRepository implements IDevRepository {
-  async registerTechs(userId: string, techs: string[]): Promise<Either<Occurrences, IDev>> {
+  async registerTechs(userId: string, techs: string[],req: Request): Promise<Either<Occurrences, IDev>> {
     try {
       const loggedUser = await DevSchema.findById(userId);
       if (!loggedUser) {
@@ -17,6 +17,7 @@ export class DevRepository implements IDevRepository {
       loggedUser.languages.push(...techs)
       loggedUser.isFirstTime = false
       await loggedUser.save()
+      req.io.emit('newUser', null)
       return right<Occurrences, IDev>(loggedUser)
     } catch(e) {
       console.log(e)

@@ -29,10 +29,10 @@ export class DevTonController {
     )
   }
 
-  async registerTechs(req: Request, res: Response): Promise<Response> {
+  async registerTechs(req: Request, res: Response, ): Promise<Response> {
     const { user } = req.headers
     const { techs } = req.body
-    const result = await this.devRepository.registerTechs(`${user}`, techs as string[])
+    const result = await this.devRepository.registerTechs(`${user}`, techs as string[], req)
     return pipe(result,
       E.fold(
         (e) => res.status(unwrapOccurrences(e).status).json(unwrapOccurrences(e)),

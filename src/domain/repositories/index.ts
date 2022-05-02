@@ -6,7 +6,7 @@ import { Request } from "express";
 export interface IDevRepository {
   getDevs: (userId: string) => Promise<Either<Occurrences, IDev[]>>
   storeDev: (username: string) => Promise<Either<Occurrences, IDev>>
-  registerTechs: (userId: string, techs: string[]) => Promise<Either<Occurrences, IDev>>
+  registerTechs: (userId: string, techs: string[], req: Request) => Promise<Either<Occurrences, IDev>>
 }
 
 export interface ILikeRepository {
