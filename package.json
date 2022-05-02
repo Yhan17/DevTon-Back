@@ -4,7 +4,7 @@
   "license": "MIT",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "node build/server/index.js",
     "build": "tsc",
     "postinstall": "npm run build",
     "dev": "ts-node-dev src/server/index.ts"
