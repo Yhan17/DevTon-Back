@@ -1,8 +1,8 @@
 {
   "name": "DevTon",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
+  "main": "src/index.ts",
   "scripts": {
     "start": "node build/index.js",
     "build": "tsc",
