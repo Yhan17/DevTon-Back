@@ -19,8 +19,7 @@ export class DevTonController {
 
   async getDevs(req: Request, res: Response): Promise<Response> {
     const { user } = req.headers
-    const { techs } = req.query
-    const result = await this.devRepository.getDevs(`${user}`, techs as string[])
+    const result = await this.devRepository.getDevs(`${user}`)
     // Colocar isso daqui em uma outra função
     return pipe(result,
       E.fold(

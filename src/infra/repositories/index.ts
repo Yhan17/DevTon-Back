@@ -24,14 +24,14 @@ export class DevRepository implements IDevRepository {
 
     }
   }
-  async getDevs(userId: string, techs: string[] | string): Promise<Either<Occurrences, IDev[]>> {
+  async getDevs(userId: string): Promise<Either<Occurrences, IDev[]>> {
     try {
       const loggedUser = await DevSchema.findById(userId);
       const users = await DevSchema.find({
         $and: [
           {
             languages: {
-              $in: techs
+              $in: loggedUser.languages
             }
           },
           {

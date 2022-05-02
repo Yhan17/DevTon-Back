@@ -4,7 +4,7 @@ import { Occurrences } from "../occurrences";
 import { Request } from "express";
 
 export interface IDevRepository {
-  getDevs: (userId: string, techs: string[] | string) => Promise<Either<Occurrences, IDev[]>>
+  getDevs: (userId: string) => Promise<Either<Occurrences, IDev[]>>
   storeDev: (username: string) => Promise<Either<Occurrences, IDev>>
   registerTechs: (userId: string, techs: string[]) => Promise<Either<Occurrences, IDev>>
 }
