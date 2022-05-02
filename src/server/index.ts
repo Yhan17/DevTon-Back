@@ -42,4 +42,4 @@ mongoose.connect(config.mongo.url, config.mongo.options, () => console.log('🎲
 app.use(express.json())
 app.use(cors())
 app.use(routes)
-app.listen(PORT, () => console.log(`🎉 App Running on ${PORT}`))
+app.listen(process.env.PORT || PORT, () => console.log(`🎉 App Running on ${PORT}`))
