@@ -8,7 +8,7 @@ import axios from "axios";
 import { Request } from 'express'
 
 export class DevRepository implements IDevRepository {
-  async registerTechs(userId: string, techs: string[],req: Request): Promise<Either<Occurrences, IDev>> {
+  async registerTechs(userId: string, techs: string[], req: Request): Promise<Either<Occurrences, IDev>> {
     try {
       const loggedUser = await DevSchema.findById(userId);
       if (!loggedUser) {
@@ -19,7 +19,7 @@ export class DevRepository implements IDevRepository {
       await loggedUser.save()
       req.io.emit('newUser', null)
       return right<Occurrences, IDev>(loggedUser)
-    } catch(e) {
+    } catch (e) {
       console.log(e)
       return left<Occurrences, IDev>(Occurrences.ServerError)
 
@@ -77,6 +77,15 @@ export class DevRepository implements IDevRepository {
 }
 
 export class DislikeRepository implements IDislikeRepository {
+  async getDislikedDevs(userId: string): Promise<Either<Occurrences, IDev[]>> {
+    try {
+      const loggedDev = await DevSchema.findById(userId).populate('dislikes');
+      const dislikedUsers = loggedDev.dislikes as unknown as IDev[]
+      return right<Occurrences, IDev[]>(dislikedUsers)
+    } catch {
+      return left<Occurrences, IDev[]>(Occurrences.DatabaseError)
+    }
+  }
   async dislikeDev(userId: string, targetId: string): Promise<Either<Occurrences, IDev>> {
     try {
       const loggedDev = await DevSchema.findById(userId);
@@ -97,6 +106,16 @@ export class DislikeRepository implements IDislikeRepository {
 }
 
 export class LikeRepository implements ILikeRepository {
+  async getLikedDevs(userId: string): Promise<Either<Occurrences, IDev[]>> {
+    try {
+      const loggedDev = await DevSchema.findById(userId).populate('likes');
+      const likedUsers = loggedDev.likes as unknown as IDev[]
+      return right<Occurrences, IDev[]>(likedUsers)
+    } catch(e) {
+      console.warn(e)
+      return left<Occurrences, IDev[]>(Occurrences.DatabaseError)
+    }
+  }
   async likeDev(userId: string, targetId: string, req: Request): Promise<Either<Occurrences, IDev>> {
     try {
 

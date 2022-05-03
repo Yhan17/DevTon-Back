@@ -84,4 +84,30 @@ export class DevTonController {
       )
     )
   }
+
+  async getDislikedDevs(req: Request, res: Response): Promise<Response> {
+    const { user } = req.headers;
+
+    const result = await this.dislikeRepository.getDislikedDevs(`${user}`);
+
+    return pipe(result,
+      E.fold(
+        (e) => res.status(unwrapOccurrences(e).status).json(unwrapOccurrences(e)),
+        (r) => res.json(r)
+      )
+    )
+  }
+
+  async getLikedDevs(req: Request, res: Response): Promise<Response> {
+    const { user } = req.headers;
+
+    const result = await this.likeRepository.getLikedDevs(`${user}`);
+
+    return pipe(result,
+      E.fold(
+        (e) => res.status(unwrapOccurrences(e).status).json(unwrapOccurrences(e)),
+        (r) => res.json(r)
+      )
+    )
+  }
 }
